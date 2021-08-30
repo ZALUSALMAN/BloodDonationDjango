@@ -1,0 +1,142 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    {% block css %}
+    
+    {% endblock %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="{% static 'style.css' %}" type="text/css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap" rel="stylesheet">
+  
+
+  </head>
+  <body>
+    <nav>
+      <div class="logo">
+      <h1 >Donate Blood</h1>
+
+      </div>
+      <ul class='links'>
+        <li><a href="{% url 'blood:home' %}">Home</a></li>
+        <li><a href="{% url 'blood:bloodgroup' %}">Register BloodGroup</a></li>
+        <li><a href="{% url 'blood:update' %}">Update Your Status</a></li>
+        
+        <li><a href="#">About Us</a></li>
+        <li><a href=" {% url  'account:signout' %}">Logout</a></li>
+      </ul>
+      <div class="burger">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+      </div>
+      
+     
+    </nav>
+    
+    
+    
+
+    {% block content %}
+
+    {% for message in messages %}
+    <h1 style="color:black">{{ message.error }}</h1>
+    {% endfor %}
+    <div class="search">
+      <form action="" method="POST"style="display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: normal;
+      margin-top: 5%;
+      margin-bottom: 1.5em;
+      /* border-style: outset; */
+      padding: 20px;
+      border: 2px solid rgba(0,0,0,0.9);
+      border-radius: 10px;
+      width:30%;
+      margin-left:35%;
+      background-color:#FBFBFB;">
+      {% csrf_token %} 
+      Pincode:<input type="number"name="pincode"required>
+      Blood Group:
+      <select name="blood_group" id="">
+        
+        <option value="None">Select Blood Group</option>
+        <option value="O+">O+</option>
+        <option value="O-">O-</option>
+        <option value="A+">A+</option>
+        <option value="A-">A-</option>
+        <option value="AB+">AB+</option>
+        <option value="AB-">AB-</option>
+        <option value="B+">B+</option>
+        <option value="B-">B-ve</option>
+      </select>
+      Street Name:<input type="text" name="street_name" placeholder="Optional" id="">
+
+      <input type="submit" value="search"style="margin-top:20px;background-image: linear-gradient(to left, #c61f44, #921d3a, #611a2d, #32131c, #000000);
+      color: floralwhite;
+        font-size: 20px;
+        border: none;
+        border-radius: 5px;" >
+      {% for message in messages %}
+
+      <p style="text-align:center;margin-top :2em;">{% if 'success' == message.tags %}{{ message }}{%  endif %}</p>
+     {% endfor %}
+      </form>
+       
+    </div>
+   {% if result %}
+    
+   
+    
+    <table class="table">
+        <thead>
+           <th>Email</th>
+           <th>Name</th>
+           <th>Phone</th>
+           <th>Place</th>
+           <th>Blood Group</th>
+           <th>Street</th>
+        </thead>
+        
+          
+      
+      </thead>
+      <tbody>
+        {% for res in result %}
+        <tr>
+          <td data-label="Email">{{ res.user.email }}</td>
+          <td data-label="Full Name">{{ res.user.full_name }}</td>
+          <td data-label="Phone">{{ res.phone }}</td>
+          <td data-label="Place">{{ res.place }}</td>
+          <td data-label="Blood Group">{{ res.blood_group }}</td>
+          <td data-label="Street">{{ res.street_name }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    {% else %}
+    
+
+    {% endif %}
+    {% for message in messages %}
+    <p style="text-align:center;font-size:30px;color:blue">
+      {% if 'error' == message.tags %}{{ message }}{%  endif %}
+      
+
+    </p>
+    {% endfor %}
+   
+    {% endblock %}
+
+
+    <script src="{% static 'nav.js' %}"></script>
+  </body>
+</html>
